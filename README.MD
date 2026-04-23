@@ -1,4 +1,4 @@
-🏢 API de Gestión de Espacios y Reservas
+🏢 API de Gestión de Espacios y Reservas CoWorking
 
 API REST desarrollada con Express para la gestión de espacios y reservas.
 
