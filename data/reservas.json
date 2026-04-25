@@ -4,7 +4,7 @@
     "horaInicio": "17:00",
     "horaFin": "19:00",
     "fecha": "22/04/2026",
-    "espacio": "2",
+    "IdEspacio": "2",
     "estado": "terminada",
     "correoUsuario": "pablo@mail.cl"
   },
@@ -13,7 +13,7 @@
     "horaInicio": "09:00",
     "horaFin": "10:00",
     "fecha": "29/04/2026",
-    "espacio": "1",
+    "IdEspacio": "1",
     "estado": "confirmada",
     "correoUsuario": "alan@mail.cl"
   },
@@ -22,7 +22,7 @@
     "horaInicio": "14:00",
     "horaFin": "14:30",
     "fecha": "23/04/2026",
-    "espacio": "4",
+    "IdEspacio": "4",
     "estado": "confirmada",
     "correoUsuario": "lidia@mail.cl"
   },
@@ -31,7 +31,7 @@
     "horaInicio": "16:00",
     "horaFin": "17:00",
     "fecha": "24/04/2026",
-    "espacio": "6",
+    "IdEspacio": "6",
     "estado": "cancelada",
     "correoUsuario": "tanya@mail.cl"
   },
@@ -40,7 +40,7 @@
     "horaInicio": "16:00",
     "horaFin": "17:00",
     "fecha": "24/04/2026",
-    "espacio": "1",
+    "IdEspacio": "1",
     "estado": "confirmada",
     "correoUsuario": "jose@mail.cl"
   },
@@ -50,6 +50,24 @@
     "horaFin": "17:00",
     "fecha": "24/04/2026",
     "IdEspacio": "1",
+    "estado": "confirmada",
+    "correoUsuario": "pablo@mail.cl"
+  },
+  {
+    "id": "1777068567744tanya@mail.cl",
+    "horaInicio": "12:00",
+    "horaFin": "14:00",
+    "fecha": "30/04/2026",
+    "IdEspacio": "1",
+    "estado": "confirmada",
+    "correoUsuario": "tanya@mail.cl"
+  },
+  {
+    "id": "1777083681975pablo@mail.cl",
+    "horaInicio": "17:00",
+    "horaFin": "18:00",
+    "fecha": "30/04/2026",
+    "IdEspacio": "5",
     "estado": "confirmada",
     "correoUsuario": "pablo@mail.cl"
   }

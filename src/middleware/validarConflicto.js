@@ -12,7 +12,8 @@ const validarConflicto = async (req, res, next) => {
                 reserva.IdEspacio === IdEspacio && 
                 reserva.fecha === fecha &&
                 reserva.horaInicio < horaFin &&
-                reserva.horaFin > horaInicio
+                reserva.horaFin > horaInicio &&
+                reserva.estado === "confirmada"
             )
         if(conflicto){
             return res.status(400).json({

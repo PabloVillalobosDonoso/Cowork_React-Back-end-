@@ -14,6 +14,17 @@ const mostrarReservas = async (req, res ) => {
 
 const crearReserva = async (req, res, next) => {
     const {horaInicio , horaFin, fecha, IdEspacio, correoUsuario} = req.body;
+            /*
+            const fecha = new Date();
+
+            const dia = String(fecha.getDate()).padStart(2, "0");
+            const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+            const año = fecha.getFullYear();
+
+            const resultado = `${dia}/${mes}/${año}`;
+
+            console.log(resultado);
+            */
 
     try {
         //const nuevoId = await obtenerLargoReservas() + 1;
@@ -42,19 +53,51 @@ const eliminarReservaPorId = async (req, res, next) => {
     try{
         const reservas = await obtenerReservas();
         const nuevasReservas = reservas.filter(reserva => reserva.id !== id)
-        console.log(nuevasReservas);
-        console.log(id);
         await actualizarReservas(nuevasReservas);
         res.status(200).json({
-            msg: `Reserva eliminada con exito ${nuevasReservas}`
+            msg: `Reserva eliminada con exito `,
+            nuevasReservas
         });
     }catch(error){
         next(error)
     }
 }
 
+const actualizarReserva = async (req, res, next) => {
+    const { id } = req.params;
+    const {horaInicio , horaFin, fecha, IdEspacio} = req.body;
+
+    try{
+        const reservas = await obtenerReservas();
+
+        const nuevasReservas = reservas.map(reserva => {
+            if(reserva.id === id ){
+                return {
+                    ...reserva,
+                    horaInicio,
+                    horaFin,
+                    fecha,
+                    IdEspacio
+                };
+            }
+            return reserva;
+        })
+
+        await actualizarReservas(nuevasReservas);
+        res.status(200).json({
+            msg: `Reserva actualizada`,
+            nuevasReservas
+        });
+
+        
+    }catch(error){
+        next(error);
+    }
+}
+
 module.exports = {
     mostrarReservas,
     crearReserva,
-    eliminarReservaPorId
+    eliminarReservaPorId,
+    actualizarReserva
 }

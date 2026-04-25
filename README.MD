@@ -1,13 +1,21 @@
-🏢 API de Gestión de Espacios y Reservas CoWorking
+# 🏢 API de Gestión de Espacios y Reservas CoWorking
 
 API REST desarrollada con Express para la gestión de espacios y reservas.
 
-🚀 Tecnologías utilizadas
-Node.js
-Express
-Cors
-Morgan
-📂 Estructura del proyecto
+---
+
+## 🚀 Tecnologías utilizadas
+
+* Node.js
+* Express
+* Cors
+* Morgan
+
+---
+
+## 📂 Estructura del proyecto
+
+```
 /src
 │
 ├── app.js
@@ -28,79 +36,224 @@ Morgan
 ├── /middlewares
 │   ├── comprobarReserva.js
 │   ├── validarConflicto.js
+│   ├── validarHoras.js
 │   └── validarReserva.js
 │
 /data
-    ├── espacios.json
-    └── reservas.json
-⚙️ Configuración
+  ├── espacios.json
+  └── reservas.json
+```
 
-El servidor utiliza variables de entorno mediante .env.
-Si no se encuentra el archivo, el servidor se ejecuta por defecto en:
+---
 
+## ⚙️ Configuración
+
+El servidor utiliza variables de entorno mediante `.env`.
+Si no se encuentra el archivo, se ejecuta por defecto en:
+
+```
 PORT=3000
-▶️ Ejecución del proyecto
+```
 
-Instalar dependencias:
+---
 
+## ▶️ Ejecución del proyecto
+
+### Instalar dependencias
+
+```bash
 npm install
+```
 
-Ejecutar el servidor:
+### Ejecutar el servidor
 
+```bash
 node src/server.js
+```
 
-⚠️ Nota: Actualmente no está configurado npm run dev, por lo que debes iniciar el proyecto manualmente como se muestra arriba.
+⚠️ **Nota:** Actualmente no está configurado `npm run dev`.
 
-📌 Endpoints
-📍 Espacios
-Obtener todos los espacios
+---
+
+## 📌 Endpoints
+
+### 📍 Espacios
+
+#### Obtener todos los espacios
+
+```http
 GET /espacios
-📅 Reservas
-Crear una reserva
-POST /reservas
-Obtener todas las reservas
+```
+
+---
+
+### 📅 Reservas
+
+#### Obtener todas las reservas
+
+```http
 GET /reservas
-Eliminar una reserva
+```
+
+---
+
+#### Crear una reserva
+
+```http
+POST /reservas
+```
+
+**Middlewares:**
+
+* validarHoras
+* validarReserva
+* validarConflicto
+
+**Body:**
+
+```json
+{
+  "horaInicio": "HH:MM",
+  "horaFin": "HH:MM",
+  "fecha": "DD/MM/YYYY",
+  "IdEspacio": "string",
+  "correoUsuario": "string"
+}
+```
+
+**Notas:**
+
+* El `id` se genera automáticamente
+* El `estado` se asigna por defecto
+
+---
+
+#### Eliminar una reserva
+
+```http
 DELETE /reservas/:id
-Actualizar una reserva
+```
+
+**Middlewares:**
+
+* comprobarReserva
+
+---
+
+#### Actualizar una reserva
+
+```http
 PUT /reservas/:id
+```
 
-⚠️ Este endpoint aún no está implementado
+**Middlewares:**
 
-🧠 Arquitectura
-Controladores
+* comprobarReserva
+* validarHoras
+* validarConflicto
 
-Contienen la lógica de negocio de cada endpoint y manejan las respuestas al cliente.
+**Body (parcial):**
 
-Modelos
+```json
+{
+  "horaInicio": "HH:MM",
+  "horaFin": "HH:MM",
+  "fecha": "DD/MM/YYYY",
+  "IdEspacio": "string",
+}
+```
 
-Gestionan la lectura y escritura de datos en archivos .json.
+**Notas:**
 
-Middlewares
-comprobarReserva.js
-Verifica que la reserva exista antes de procesar la solicitud.
-validarReserva.js
-Valida los datos enviados al crear una reserva.
-validarConflicto.js
-Evita que existan reservas con horarios superpuestos.
-🛡️ Manejo de errores
+* No se pueden modificar: `id`, `estado`
+* Solo se actualizan los campos enviados
 
-El proyecto incluye manejo de errores para:
+---
 
-Solicitudes con datos inválidos
-Recursos no encontrados
-Conflictos de reservas
-Errores internos del servidor
-🔍 Validaciones
+## 🧠 Arquitectura
 
-Se validan aspectos como:
+### Controllers
 
-Campos obligatorios
-Disponibilidad del espacio en el horario solicitado
-📊 Logs y CORS
-Morgan: registra las solicitudes HTTP en consola
-Cors: permite peticiones desde otros dominios
-📌 Notas
-Los datos se almacenan en archivos JSON (sin base de datos).
-El endpoint PUT /reservas/:id está definido pero pendiente de implementación.
-Proyecto enfocado en práctica de arquitectura backend con Express.
+#### Espacios
+
+* `mostrarEspacios` → Retorna todos los espacios
+
+#### Reservas
+
+* `mostrarReservas` → Retorna todas las reservas
+* `crearReserva` → Crea una nueva reserva
+* `eliminarReservaPorId` → Elimina una reserva por ID
+* `actualizarReserva` → Actualiza una reserva por ID
+
+---
+
+### Models
+
+#### Espacios
+
+* `leerEspacios` *(privado)*
+* `escribirEspacios` *(privado)*
+* `obtenerEspacios` → Retorna los espacios
+
+#### Reservas
+
+* `leerReservas` *(privado)*
+* `escribirReservas` *(privado)*
+* `obtenerReservas` → Obtiene todas las reservas
+* `crearReservas` → Guarda una reserva
+* `obtenerLargoReservas` → Cantidad de reservas
+* `actualizarReservas` → Actualiza una reserva
+
+---
+
+### Middlewares
+
+* `comprobarReserva` → Verifica que la reserva exista
+* `validarConflicto` → Evita solapamiento de horarios con otras reservas
+* `validarHoras` → Verifica que `horaFin > horaInicio`
+* `validarReserva` → Valida estructura de datos
+
+---
+
+## 🔍 Validaciones
+
+* `horaFin` debe ser mayor que `horaInicio`
+* No se permiten reservas en conflicto de horario
+* Se valida existencia antes de eliminar o actualizar
+
+---
+
+## 📊 Códigos de estado HTTP
+
+* `200 OK` → Operación exitosa
+* `201 Created` → Recurso creado
+* `400 Bad Request` → Datos inválidos
+* `404 Not Found` → Recurso no encontrado
+* `409 Conflict` → Conflicto de horario
+* `500 Internal Server Error` → Error del servidor
+
+---
+
+## 🛡️ Manejo de errores
+
+El proyecto maneja:
+
+* Datos inválidos
+* Reservas inexistentes
+* Conflictos de horario
+* Errores internos
+
+---
+
+## 📊 Logs y CORS
+
+* **Morgan:** Registro de solicitudes HTTP
+* **Cors:** Permite peticiones externas
+
+---
+
+## 📌 Notas
+
+* Formato de hora: `HH:MM`
+* Formato de fecha: `DD/MM/YYYY`
+* Persistencia mediante archivos JSON

@@ -7,7 +7,6 @@ const rutaReservas = path.join(__dirname,"../../data/reservas.json");
 //leer el json
 const leerReservas  = async () => {
     const data = await fs.readFile(rutaReservas, "utf8");
-    console.log(data)
     return JSON.parse(data)
 }
 
@@ -17,7 +16,7 @@ const escribirReservas = async (reservas) => {
 }
 
 const obtenerReservas = async () => {
-    return leerReservas();
+    return await leerReservas();
 }
 
 const crearReservas = async (nuevaReserva) => {
@@ -28,7 +27,7 @@ const crearReservas = async (nuevaReserva) => {
 }
 
 const obtenerLargoReservas = async () => {
-    const data = await fs.readFile(rutaReservas, "utf8");
+    const data = leerReservas();
     const cantidadReservas = JSON.parse(data);
     return cantidadReservas.length
 }
