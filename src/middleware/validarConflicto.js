@@ -17,7 +17,7 @@ const validarConflicto = async (req, res, next) => {
             )
         if(conflicto){
             return res.status(400).json({
-                msg: "Espacio ocuapdo en el horario seleccionado"
+                msg: "Espacio ocupado en el horario seleccionado"
             })
         }
 
