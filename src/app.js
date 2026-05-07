@@ -2,7 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const espaciosRoutes = require("./routes/espacios.routes");
-const reservasRoutes = require("./routes/reservas.routes")
+const reservasRoutes = require("./routes/reservas.routes");
+const usuariosRoutes = require("./routes/usuarios.routes");
+const auth = require("./middleware/auth");
+const errorHandler = require("./middleware/errorHandler");
+const notFound = require("./middleware/notFound");
 
 //importar controlador
 
@@ -10,7 +14,7 @@ const reservasRoutes = require("./routes/reservas.routes")
 // Middleware para parsear JSON
 const app = express();
 
-//middlewares incorporados(espress) y de terceros
+//middlewares incorporados(express) y de terceros
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
@@ -21,11 +25,17 @@ app.get(`/`,(req, res) => {
 })
 
 //rutas espacios
-app.use("/espacios", espaciosRoutes);
+app.use("/espacios", auth, espaciosRoutes);
 
 //rutas reservas
-app.use("/reservas", reservasRoutes);
+app.use("/reservas", auth, reservasRoutes);
 
+//ruta usuarios
+app.use("/usuario", usuariosRoutes);
+
+//manejo de errores
+app.use(notFound); //rutas no encontradas
+app.use(errorHandler);  //sobreeescribir errores en express
 
 
 module.exports = app;

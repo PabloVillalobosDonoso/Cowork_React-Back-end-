@@ -1,11 +1,13 @@
 const { obtenerEspacios } = require("../models/espacios.models");
+const { obtenerEspacioPorId } = require("../models/espacios.mongoose");
+const { connect } = require("../database/mongoose");
 
 const validarReserva = async (req, res, next) => {
 
-    const {horaInicio , horaFin, fecha, IdEspacio, correoUsuario} = req.body;
+    const {idEspacio, fecha, horaInicio, horaFin, idUsuario} = req.body;
 
     //validacion de campos
-    if(!horaInicio || !horaFin || !fecha || !IdEspacio || !correoUsuario){
+    if(!idEspacio || !fecha || !horaInicio || !horaFin || !idUsuario){
         return res.status(400).json({
             msg: "Por favor llene todos los campos"
         })
@@ -13,10 +15,10 @@ const validarReserva = async (req, res, next) => {
 
     try{
         //validar espacio
-        const espacios = await obtenerEspacios();
-        const ExisteEspacios = espacios.some(espacio => espacio.id === Number(IdEspacio));
+        await connect();
+        const ExisteEspacio = await obtenerEspacioPorId(idEspacio);
 
-        if(!ExisteEspacios) {
+        if(!ExisteEspacio) {
             return res.status(404).json({
                 msg: "El espacio no existe"
             })

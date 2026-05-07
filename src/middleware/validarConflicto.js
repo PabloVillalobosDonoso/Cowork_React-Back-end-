@@ -1,8 +1,36 @@
-const { obtenerReservas } = require("../models/reservas.models")
+//const { obtenerReservas } = require("../models/reservas.models")
+const { buscarReserva } = require("../models/reservas.mongoose")
+const { connect } = require("../database/mongoose")
 
 const validarConflicto = async (req, res, next) => {
 
-    const {horaInicio , horaFin, fecha, IdEspacio} = req.body;
+    const { idEspacio, fecha, horaInicio, horaFin } = req.body;
+
+    try{
+        await connect();
+        const existeReserva = await buscarReserva(idEspacio, fecha, horaInicio, horaFin);
+
+        if(existeReserva){
+            console.log(existeReserva)
+            return res.status(400).json({
+                msg: "El espacio ya esta reservado para esa hora"
+            })
+        }
+
+        next();
+
+    }catch(error){
+        next(error);
+    }
+
+}
+
+module.exports = validarConflicto
+
+
+/* VERSION CON JSON SIN MONGODB
+
+const {horaInicio , horaFin, fecha, IdEspacio} = req.body;
 
     try{
         const reservas = await obtenerReservas();
@@ -26,6 +54,5 @@ const validarConflicto = async (req, res, next) => {
     }catch(error){
         next(error)
     }
-}
 
-module.exports = validarConflicto
+*/

@@ -1,52 +1,87 @@
-const { obtenerReservas, crearReservas, obtenerLargoReservas, actualizarReservas } = require("../models/reservas.models.js")
+//const { obtenerReservas, crearReservas, obtenerLargoReservas, actualizarReservas } = require("../models/reservas.models.js")
+const { connect } = require("../database/mongoose.js")
+const {obtenerTodasLasReservas, guardarReserva, buscarReserva, actualizarEstadoReserva, obtenerReservasUsuario } = require("../models/reservas.mongoose.js")
 const mostrarReservas = async (req, res ) => {
     try{
-        const reservas = await obtenerReservas();
+        await connect();
+        const reservas = await obtenerTodasLasReservas();
         res.status(200).json(reservas);
-    } catch(error){
+    }catch(error){
         console.log("error", error);
         res.status(500).json({
             msg: "error del servidor"
         })
-        
     }
+
+    //VERSION CON JSON
+    // try{
+    //     const reservas = await obtenerReservas();
+    //     res.status(200).json(reservas);
+    // } catch(error){
+    //     console.log("error", error);
+    //     res.status(500).json({
+    //         msg: "error del servidor"
+    //     })
+        
+    // }
 }
 
 const crearReserva = async (req, res, next) => {
-    const {horaInicio , horaFin, fecha, IdEspacio, correoUsuario} = req.body;
-            /*
-            const fecha = new Date();
-
-            const dia = String(fecha.getDate()).padStart(2, "0");
-            const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-            const año = fecha.getFullYear();
-
-            const resultado = `${dia}/${mes}/${año}`;
-
-            console.log(resultado);
-            */
+    const {idEspacio, fecha, horaInicio, horaFin, idUsuario} = req.body;
 
     try {
-        //const nuevoId = await obtenerLargoReservas() + 1;
-        const nuevoId = Date.now() + correoUsuario;
+        await connect
         const nuevaReserva = {
-            id: nuevoId,
+            idEspacio,
+            fecha,
             horaInicio,
             horaFin,
-            fecha,
-            IdEspacio,
-            estado: "confirmada",
-            correoUsuario
-        };
-        
-        const reservaCreada = await crearReservas(nuevaReserva);
-        res.status(201).json(reservaCreada);
+            idUsuario
+        }
+
+        const reservaCreada = await guardarReserva(nuevaReserva);
+
+        res.status(201).json({
+            msg: "Reserva creda con exito!",
+            reservaCreada
+        })
 
     }catch(error){
         next(error)
     }
 }
 
+const cambiarEstadoReserva= async (req, res, next) => {
+    const { idReserva } = req.params;
+    const { nuevoEstado} = req.body;
+
+    try{
+
+        await connect();
+        const reservaActualizada = await actualizarEstadoReserva(idReserva, nuevoEstado);
+        res.status(200).json({
+            msg: "Reserva actualizada con exito!",
+            reservaActualizada
+        })
+
+    }catch(error){
+        next(error);
+    }
+}
+
+const obtenerReservasDeUsuario = async (req, res, next) =>{
+    const { idUsuario } =req.params;
+
+    try{
+        await connect();
+        const reservasUsuario = await obtenerReservasUsuario(idUsuario);
+        res.status(200).json(reservasUsuario);
+
+    }catch(error){
+        next(error);
+    }
+}
+/*
 const eliminarReservaPorId = async (req, res, next) => {
     const { id } = req.params;
 
@@ -94,10 +129,10 @@ const actualizarReserva = async (req, res, next) => {
         next(error);
     }
 }
-
+*/
 module.exports = {
     mostrarReservas,
     crearReserva,
-    eliminarReservaPorId,
-    actualizarReserva
+    cambiarEstadoReserva,
+    obtenerReservasDeUsuario
 }
