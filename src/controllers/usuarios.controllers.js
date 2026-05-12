@@ -47,7 +47,7 @@ const iniciarSesion = async (req, res, next) => {
         }
 
         //token de acceso
-        const token = jwt.sign({id:usuario._id, correo:usuario.correo, rol:usuario.rol}, process.env.SECRET_KEY, {expiresIn: "8h"})
+        const token = jwt.sign({id:usuario._id, correo:usuario.correo, rol:usuario.rol, nombre:usuario.nombre, numero:usuario.numero}, process.env.SECRET_KEY, {expiresIn: "8h"})
 
         res.status(200).json({
             msg:"Sesion iniciada",

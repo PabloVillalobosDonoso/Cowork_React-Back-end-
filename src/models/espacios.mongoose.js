@@ -1,12 +1,14 @@
 const mongoose = require("mongoose")
 
 const espacioSchema = new mongoose.Schema({
+    
     //id: {type: Number, required: true, unique: true},
     nombre: {type: String, required: true},
     ubicacion: {type: String, required: true},
     descripcion: {type: String, required: true},
     capacidad: {min: Number, max: Number},
     precio: {type: Number, required: true},
+    tipo_arriendo: {type: String, required:true},
     disponible: {type: Boolean, default: true},
     imagen: {type: String},
     caracteristicas: [{type: String}]

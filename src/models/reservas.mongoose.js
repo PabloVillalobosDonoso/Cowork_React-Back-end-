@@ -66,6 +66,11 @@ async function obtenerReservasUsuario(idUsuario){
         imagen: 0,
         caracteristicas: 0,
         _id: 0
+    }).populate("idUsuario",{
+        _id:0,
+        apellido:0,
+        contraseña:0,
+        rol:0
     })
 }
 
